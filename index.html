@@ -11,8 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
 <!-- PWA icon para iPhone (puedes cambiar esta URL por tu propio icono) -->
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/svg+xml" href="icon.png">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 
 <style>
   :root {
@@ -45,9 +45,9 @@
   header::after {
     content: 'STRENGTH';
     position: absolute;
-    right: -20px; top: -10px;
+    right: 0px; top: -10px; letter-spacing: -2px;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 160px;
+    font-size: 120px;
     color: var(--white);
     opacity: 0.03;
     line-height: 1;
@@ -599,7 +599,12 @@ const schemes = {
   }
 };
 
-let currentMonth = 1;
+// Auto-mes según fecha de inicio 23/03/2025
+const startDate = new Date("2026-03-23");
+const now = new Date();
+const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+let autoMonth = diffDays < 0 ? 1 : diffDays < 31 ? 1 : diffDays < 62 ? 2 : 3;
+let currentMonth = autoMonth;
 
 function setMonth(m, btn) {
   currentMonth = m;
@@ -625,6 +630,12 @@ function showDay(day, item) {
   document.getElementById('panel-' + day).classList.add('active');
   item.classList.add('active');
 }
+
+// Activar botón del mes correcto al cargar
+document.querySelectorAll(".month-btn").forEach((b,i) => {
+  b.classList.toggle("active", i+1 === autoMonth);
+});
+updateSchemes();
 
 // Mostrar banner de instalación en iOS Safari
 const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
