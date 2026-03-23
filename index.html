@@ -879,7 +879,7 @@ Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así
 }`;
 
   try {
-    const response = await fetch("http://localhost:3131/api/claude", {
+    const response = await fetch("https://crossfit-proxy.macauda11.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
