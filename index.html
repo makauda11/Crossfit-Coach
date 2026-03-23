@@ -9,10 +9,8 @@
 <meta name="theme-color" content="#0a0a0a">
 <title>Fuerza PRE-WOD</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
-<!-- PWA icon para iPhone (puedes cambiar esta URL por tu propio icono) -->
-<link rel="apple-touch-icon" sizes="512x512" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 
 <style>
   :root {
@@ -78,6 +76,241 @@
     font-size: 14px;
     font-weight: 300;
     max-width: 400px;
+  }
+
+  /* WOD BUTTON */
+  .wod-trigger-bar {
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .wod-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    padding: 14px 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .wod-btn:hover { background: #e64400; transform: translateY(-1px); }
+  .wod-btn:active { transform: translateY(0); }
+  .wod-btn svg { width: 18px; height: 18px; fill: white; flex-shrink: 0; }
+  .wod-btn.loading { pointer-events: none; opacity: 0.7; }
+  .wod-btn .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .wod-btn.loading .spinner { display: block; }
+  .wod-btn.loading .btn-icon { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .wod-trigger-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  /* WOD PANEL */
+  #wod-panel {
+    display: none;
+    margin: 0 40px 0;
+    border: 1px solid var(--border);
+    border-top: none;
+    background: #0f0f0f;
+    animation: fadeIn 0.4s ease;
+  }
+  #wod-panel.visible { display: block; }
+
+  .wod-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .wod-panel-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .wod-panel-title h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+  .wod-panel-title .wod-date {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    font-weight: 500;
+  }
+  .wod-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    width: 32px; height: 32px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .wod-close:hover { color: var(--white); border-color: var(--white); }
+
+  .wod-body { padding: 24px; }
+
+  /* WOD FORMAT BADGE */
+  .wod-format-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .wod-format-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    background: var(--orange);
+    color: white;
+  }
+  .wod-cap {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+  }
+  .wod-cap span { color: var(--white); font-weight: 500; }
+
+  /* WOD MOVEMENTS */
+  .wod-movements {
+    margin-bottom: 20px;
+  }
+  .wod-movements-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+  .wod-movement-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+  }
+  .wod-movement-item {
+    background: var(--card);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .wod-movement-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  .wod-movement-scheme {
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* WOD DESCRIPTION */
+  .wod-desc-box {
+    padding: 14px 16px;
+    border-left: 2px solid var(--orange);
+    background: var(--orange-dim);
+    margin-bottom: 20px;
+  }
+  .wod-desc-box p {
+    font-size: 12px;
+    color: #ccc;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* WOD SCALING */
+  .wod-scaling {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .wod-scale-item {
+    background: var(--card);
+    padding: 12px 16px;
+  }
+  .wod-scale-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .wod-scale-text {
+    font-size: 12px;
+    color: var(--white);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* ERROR STATE */
+  .wod-error {
+    padding: 20px 24px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .wod-error strong { color: var(--orange); }
+
+  /* LOADING STATE */
+  .wod-loading-state {
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .wod-loading-state .big-spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  .wod-loading-state p {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
   }
 
   /* MONTH */
@@ -187,7 +420,6 @@
     transform: translateY(-2px);
   }
 
-  /* VIDEO THUMBNAIL */
   .video-link {
     display: block;
     width: 100%;
@@ -229,7 +461,6 @@
   .video-link:hover .play-btn { transform: scale(1.1); }
   .play-btn svg { width: 22px; height: 22px; fill: white; margin-left: 3px; }
 
-  /* EXERCISE INFO */
   .exercise-info { padding: 20px; }
   .exercise-name {
     font-family: 'Bebas Neue', sans-serif;
@@ -284,7 +515,6 @@
   .tip-box p { font-size: 11px; color: #ccc; font-weight: 300; line-height: 1.5; }
   .tip-box strong { color: var(--orange); font-weight: 500; }
 
-  /* INSTALL BANNER */
   .install-banner {
     display: none;
     position: fixed;
@@ -318,12 +548,15 @@
     header { padding: 50px 20px 30px; }
     header::after { font-size: 80px; }
     .month-selector { padding: 16px 20px 0; }
+    .wod-trigger-bar { padding: 16px 20px; }
     .week-bar { gap: 4px; margin: 24px 12px 0; }
     .week-item { padding: 10px 4px; }
     .wi-name { font-size: 10px; }
     .wi-day { font-size: 8px; }
     .content { padding: 24px 16px; }
     .day-header { flex-direction: column; gap: 4px; }
+    #wod-panel { margin: 0 12px 0; }
+    .wod-scaling { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -334,6 +567,21 @@
   <h1>FUERZA<br><span>PRE-WOD</span></h1>
   <p>Bloque de fuerza diario antes del WOD. Lunes a viernes, progresión por mes.</p>
 </header>
+
+<!-- WOD TRIGGER -->
+<div class="wod-trigger-bar">
+  <button class="wod-btn" id="wodBtn" onclick="generateWOD()">
+    <svg class="btn-icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <div class="spinner"></div>
+    GENERAR WOD DE HOY
+  </button>
+  <span class="wod-trigger-label">IA · Equipamiento en casa · ~20 min</span>
+</div>
+
+<!-- WOD PANEL -->
+<div id="wod-panel">
+  <div id="wod-content"></div>
+</div>
 
 <div class="month-selector">
   <button class="month-btn active" onclick="setMonth(1,this)">MES 1</button>
@@ -568,13 +816,144 @@
 
 </div>
 
-<!-- INSTALL BANNER (iPhone) -->
+<!-- INSTALL BANNER -->
 <div class="install-banner" id="installBanner">
   <button class="install-close" onclick="document.getElementById('installBanner').classList.remove('show')">×</button>
   📲 Instala esta app: toca <strong>Compartir</strong> → <strong>Añadir a pantalla de inicio</strong>
 </div>
 
 <script>
+// ─── WOD GENERATOR ───────────────────────────────────────────────
+const EQUIPMENT = "barra olímpica con discos (hasta 60kg total: 5, 10, 15, 20kg), kettlebell, battle rope, cajón de saltos (box), mancuernas, comba (jump rope), espacio exterior para correr/sprints";
+const LEVEL = "intermedio";
+const MAX_DURATION = 20;
+
+async function generateWOD() {
+  const btn = document.getElementById('wodBtn');
+  const panel = document.getElementById('wod-panel');
+  const content = document.getElementById('wod-content');
+
+  btn.classList.add('loading');
+  panel.classList.add('visible');
+
+  const today = new Date();
+  const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const todayName = days[today.getDay()];
+  const dateStr = today.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+
+  content.innerHTML = `
+    <div class="wod-loading-state">
+      <div class="big-spinner"></div>
+      <p>Generando WOD para hoy…</p>
+    </div>`;
+
+  // Scroll suave al panel
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  const prompt = `Eres un coach de CrossFit experto. Genera un WOD para hoy (${todayName}, ${dateStr}) con estas reglas ESTRICTAS:
+
+EQUIPAMIENTO DISPONIBLE: ${EQUIPMENT}
+NIVEL: ${LEVEL}
+DURACIÓN MÁXIMA: ${MAX_DURATION} minutos (tiempo de trabajo, sin calentamiento)
+IDIOMA: español
+
+INSTRUCCIONES:
+- Usa SOLO el equipamiento listado. Sin pull-up bar, sin rower, sin bicicleta.
+- El formato puede ser: AMRAP, For Time, EMOM, Tabata, o RFT (Rounds For Time).
+- Máximo 4-5 movimientos.
+- Incluye cargas específicas en kg para la barra o kettlebell.
+- El WOD debe ser intenso pero completable en el tiempo indicado.
+
+Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así:
+{
+  "nombre": "nombre creativo del WOD en mayúsculas",
+  "formato": "AMRAP / For Time / EMOM / Tabata / RFT",
+  "cap": "20 min",
+  "movimientos": [
+    { "nombre": "Nombre del ejercicio", "esquema": "X reps / X kg / X segundos" },
+    { "nombre": "...", "esquema": "..." }
+  ],
+  "descripcion": "Explicación táctica en 1-2 frases: cómo afrontarlo, qué músculo prima, estrategia de pace.",
+  "rx": "Descripción breve del nivel RX",
+  "scaled": "Descripción breve de la versión escalada para si el día es duro"
+}`;
+
+  try {
+    const response = await fetch("http://localhost:3131/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-5",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content?.[0]?.text || "";
+
+    let wod;
+    try {
+      wod = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    } catch(e) {
+      throw new Error("JSON inválido en respuesta");
+    }
+
+    const movHtml = wod.movimientos.map(m => `
+      <li class="wod-movement-item">
+        <span class="wod-movement-name">${m.nombre}</span>
+        <span class="wod-movement-scheme">${m.esquema}</span>
+      </li>`).join('');
+
+    content.innerHTML = `
+      <div class="wod-panel-header">
+        <div class="wod-panel-title">
+          <h3>${wod.nombre}</h3>
+          <span class="wod-date">${todayName} · ${dateStr}</span>
+        </div>
+        <button class="wod-close" onclick="closeWOD()">×</button>
+      </div>
+      <div class="wod-body">
+        <div class="wod-format-row">
+          <span class="wod-format-badge">${wod.formato}</span>
+          <span class="wod-cap">TIME CAP <span>${wod.cap}</span></span>
+        </div>
+        <div class="wod-movements">
+          <div class="wod-movements-label">Movimientos</div>
+          <ul class="wod-movement-list">${movHtml}</ul>
+        </div>
+        <div class="wod-desc-box">
+          <p><strong style="color:var(--orange)">Estrategia:</strong> ${wod.descripcion}</p>
+        </div>
+        <div class="wod-scaling">
+          <div class="wod-scale-item">
+            <div class="wod-scale-label">RX</div>
+            <div class="wod-scale-text">${wod.rx}</div>
+          </div>
+          <div class="wod-scale-item">
+            <div class="wod-scale-label">Scaled</div>
+            <div class="wod-scale-text">${wod.scaled}</div>
+          </div>
+        </div>
+      </div>`;
+
+  } catch(err) {
+    content.innerHTML = `
+      <div class="wod-panel-header">
+        <div class="wod-panel-title"><h3>ERROR</h3></div>
+        <button class="wod-close" onclick="closeWOD()">×</button>
+      </div>
+      <div class="wod-error"><strong>No se pudo generar el WOD.</strong> Revisa tu conexión e inténtalo de nuevo.<br><small style="color:#555;margin-top:6px;display:block">${err.message}</small></div>`;
+  }
+
+  btn.classList.remove('loading');
+}
+
+function closeWOD() {
+  document.getElementById('wod-panel').classList.remove('visible');
+}
+
+// ─── SCHEMES ────────────────────────────────────────────────────
 const schemes = {
   1: {
     'lunes-0':     {s:5,r:3,c:'65'}, 'lunes-1':     {s:4,r:5,c:'50'},
@@ -599,7 +978,6 @@ const schemes = {
   }
 };
 
-// Auto-mes según fecha de inicio 23/03/2025
 const startDate = new Date("2026-03-23");
 const now = new Date();
 const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
@@ -631,13 +1009,11 @@ function showDay(day, item) {
   item.classList.add('active');
 }
 
-// Activar botón del mes correcto al cargar
 document.querySelectorAll(".month-btn").forEach((b,i) => {
   b.classList.toggle("active", i+1 === autoMonth);
 });
 updateSchemes();
 
-// Mostrar banner de instalación en iOS Safari
 const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isInStandalone = window.navigator.standalone;
 if (isIos && !isInStandalone) {
