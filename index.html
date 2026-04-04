@@ -833,9 +833,6 @@ async function generateWOD() {
   const panel = document.getElementById('wod-panel');
   const content = document.getElementById('wod-content');
 
-  btn.classList.add('loading');
-  panel.classList.add('visible');
-
   const today = new Date();
   const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   const todayName = days[today.getDay()];
@@ -864,6 +861,9 @@ async function generateWOD() {
       return;
     } catch(e) { /* si falla, genera uno nuevo */ }
   }
+
+  btn.classList.add('loading');
+  panel.classList.add('visible');
 
   content.innerHTML = `
     <div class="wod-loading-state">
