@@ -850,18 +850,61 @@ async function generateWOD() {
   // Scroll suave al panel
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  const prompt = `Eres un coach de CrossFit experto. Genera un WOD para hoy (${todayName}, ${dateStr}) con estas reglas ESTRICTAS:
+  // Variedad forzada
+  const formatos = ['AMRAP', 'For Time', 'EMOM', 'Tabata', 'RFT'];
+  const focos = ['piernas y potencia', 'tren superior y core', 'full body metcon', 'cadena posterior', 'cardio y fuerza', 'hombros y glúteos', 'core y explosividad'];
+  const movimientosPool = [
+    'Deadlift', 'Clean', 'Power Clean', 'Squat Clean', 'Thruster', 'Back Squat', 'Front Squat', 'Overhead Squat',
+    'Push Press', 'Shoulder Press', 'Push Jerk', 'Snatch', 'Power Snatch',
+    'Kettlebell Swing', 'Kettlebell Clean', 'Kettlebell Thruster', 'Goblet Squat', 'Turkish Get-Up',
+    'Burpee Box Jump', 'Box Jump', 'Box Step-Up', 'Saltos a cajón',
+    'Double Unders', 'Single Unders', 'Comba al sprint',
+    'Battle Rope Waves', 'Battle Rope Slams', 'Battle Rope Alternating',
+    'Devil Press (mancuernas)', 'Dumbbell Snatch', 'Dumbbell Thruster', 'Dumbbell Lunges', 'Dumbbell Row',
+    'Sit-Ups con AbMat', 'GHD Sit-Ups (AbMat)', 'V-Ups', 'Hollow Rock',
+    'Sprints 50m', 'Sprints 100m', 'Carrera 200m', 'Carrera 400m',
+    'Burpees', 'Burpee over bar', 'Wall Walk', 'Bear Crawl',
+    'Romanian Deadlift', 'Sumo Deadlift High Pull', 'Good Mornings'
+  ];
+  const randomSeed = Math.floor(Math.random() * 99999);
+  const formatoElegido = formatos[Math.floor(Math.random() * formatos.length)];
+  const focoElegido = focos[Math.floor(Math.random() * focos.length)];
+  const movShuffle = movimientosPool.sort(() => Math.random() - 0.5).slice(0, 8).join(', ');
 
-EQUIPAMIENTO DISPONIBLE: ${EQUIPMENT}
+  const seed = Math.floor(Math.random() * 99999);
+  const formats = ['AMRAP', 'For Time', 'EMOM', 'RFT', 'Tabata'];
+  const forcedFormat = formats[Math.floor(Math.random() * formats.length)];
+  const focusOptions = ['piernas y cardio', 'upper body y core', 'full body potencia', 'cardio y resistencia', 'fuerza y metcon', 'posterior chain', 'empuje y tirón'];
+  const forcedFocus = focusOptions[Math.floor(Math.random() * focusOptions.length)];
+
+  const prompt = `Eres un coach de CrossFit experto. Genera un WOD ÚNICO para hoy (${todayName}, ${dateStr}). Seed de aleatoriedad: ${seed}.
+
+SEED ALEATORIO (úsalo para garantizar variedad): ${randomSeed}
+FOCO DEL DÍA: ${focoElegido}
+FORMATO SUGERIDO: ${formatoElegido}
+MOVIMIENTOS SUGERIDOS (elige 3-5 de esta lista o similares): ${movShuffle}
+
+EQUIPAMIENTO DISPONIBLE (SOLO estos materiales):
+- Barra olímpica con discos (hasta ~60kg: discos de 5, 10, 15, 20kg)
+- Kettlebell
+- Battle rope
+- Cajón de saltos (box)
+- Mancuernas
+- Comba (jump rope)
+- AbMat
+- Espacio exterior para correr/sprints
+
 NIVEL: ${LEVEL}
 DURACIÓN MÁXIMA: ${MAX_DURATION} minutos (tiempo de trabajo, sin calentamiento)
 IDIOMA: español
 
-INSTRUCCIONES:
-- Usa SOLO el equipamiento listado. Sin pull-up bar, sin rower, sin bicicleta.
-- El formato puede ser: AMRAP, For Time, EMOM, Tabata, o RFT (Rounds For Time).
-- Máximo 4-5 movimientos.
-- Incluye cargas específicas en kg para la barra o kettlebell.
+FORMATO OBLIGATORIO: ${forcedFormat}
+FOCO OBLIGATORIO: ${forcedFocus}
+
+REGLAS ESTRICTAS:
+- USA SOLO el equipamiento listado. PROHIBIDO: pull-up bar, anillas, rower, bici, máquinas.
+- El WOD debe ser DISTINTO cada vez — varía movimientos, formato, rep scheme y carga.
+- Incluye cargas específicas en kg para barra, kettlebell o mancuernas.
 - El WOD debe ser intenso pero completable en el tiempo indicado.
 
 Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así:
