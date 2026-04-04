@@ -841,9 +841,10 @@ async function generateWOD() {
   const todayName = days[today.getDay()];
   const dateStr = today.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
 
-  // ── Comprobar caché del día ──
+  // ── Comprobar caché del día (cookie) ──
   const todayCacheKey = `wod_${today.getFullYear()}_${today.getMonth()}_${today.getDate()}`;
-  const cached = localStorage.getItem(todayCacheKey);
+  const cookieMatch = document.cookie.split('; ').find(r => r.startsWith(todayCacheKey + '='));
+  const cached = cookieMatch ? decodeURIComponent(cookieMatch.split('=').slice(1).join('=')) : null;
   if (cached) {
     try {
       const wodCached = JSON.parse(cached);
@@ -956,9 +957,10 @@ Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así
       throw new Error("JSON inválido en respuesta");
     }
 
-    // Guardar WOD del día
-    const cacheKey = `wod_${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDate()}`;
-    localStorage.setItem(cacheKey, JSON.stringify(wod));
+    // Guardar WOD del día como cookie hasta las 23:59
+    const cacheKey2 = `wod_${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDate()}`;
+    const midnight = new Date(); midnight.setHours(23,59,59,999);
+    document.cookie = `${cacheKey2}=${encodeURIComponent(JSON.stringify(wod))}; expires=${midnight.toUTCString()}; path=/`;
 
     const movHtml = wod.movimientos.map(m => `
       <li class="wod-movement-item">
