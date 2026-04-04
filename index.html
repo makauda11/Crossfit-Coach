@@ -841,6 +841,20 @@ async function generateWOD() {
   const todayName = days[today.getDay()];
   const dateStr = today.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
 
+  // ── Comprobar caché del día ──
+  const todayCacheKey = `wod_${today.getFullYear()}_${today.getMonth()}_${today.getDate()}`;
+  const cached = localStorage.getItem(todayCacheKey);
+  if (cached) {
+    try {
+      const wodCached = JSON.parse(cached);
+      const movHtmlC = wodCached.movimientos.map(m => `<li class="wod-movement-item"><span class="wod-movement-name">${m.nombre}</span><span class="wod-movement-scheme">${m.esquema}</span></li>`).join('');
+      panel.classList.add('visible');
+      content.innerHTML = `<div class="wod-panel-header"><div class="wod-panel-title"><h3>${wodCached.nombre}</h3><span class="wod-date">${todayName} · ${dateStr}</span></div><button class="wod-close" onclick="closeWOD()">×</button></div><div class="wod-body"><div class="wod-format-row"><span class="wod-format-badge">${wodCached.formato}</span><span class="wod-cap">TIME CAP <span>${wodCached.cap}</span></span></div><div class="wod-movements"><div class="wod-movements-label">Movimientos</div><ul class="wod-movement-list">${movHtmlC}</ul></div><div class="wod-desc-box"><p><strong style="color:var(--orange)">Estrategia:</strong> ${wodCached.descripcion}</p></div><div class="wod-scaling"><div class="wod-scale-item"><div class="wod-scale-label">RX</div><div class="wod-scale-text">${wodCached.rx}</div></div><div class="wod-scale-item"><div class="wod-scale-label">Scaled</div><div class="wod-scale-text">${wodCached.scaled}</div></div></div></div>`;
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    } catch(e) { /* si falla, genera uno nuevo */ }
+  }
+
   content.innerHTML = `
     <div class="wod-loading-state">
       <div class="big-spinner"></div>
@@ -941,6 +955,10 @@ Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así
     } catch(e) {
       throw new Error("JSON inválido en respuesta");
     }
+
+    // Guardar WOD del día
+    const cacheKey = `wod_${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDate()}`;
+    localStorage.setItem(cacheKey, JSON.stringify(wod));
 
     const movHtml = wod.movimientos.map(m => `
       <li class="wod-movement-item">
