@@ -845,7 +845,10 @@ async function generateWOD() {
   if (cached) {
     try {
       const wodCached = JSON.parse(cached);
-      const movHtmlC = wodCached.movimientos.map(m => `<li class="wod-movement-item"><span class="wod-movement-name">${m.nombre}</span><span class="wod-movement-scheme">${m.esquema}</span></li>`).join('');
+      const movHtmlC = wodCached.movimientos.map(m => {
+        const ytUrl = `https://www.youtube.com/results?search_query=crossfit+${encodeURIComponent(m.nombre)}+tutorial`;
+        return `<li class="wod-movement-item"><div style="display:flex;flex-direction:column;gap:2px;"><span class="wod-movement-name">${m.nombre}</span><a href="${ytUrl}" target="_blank" style="font-size:10px;color:#888;letter-spacing:1px;text-decoration:none;display:flex;align-items:center;gap:4px;">▶ Ver en YouTube</a></div><span class="wod-movement-scheme">${m.esquema}</span></li>`;
+      }).join('');
       panel.classList.add('visible');
       content.innerHTML = `
         <div class="wod-panel-header">
@@ -971,11 +974,10 @@ Responde SOLO con un JSON válido, sin markdown, sin backticks, exactamente así
     const midnight = new Date(); midnight.setHours(23,59,59,999);
     document.cookie = `${cacheKey2}=${encodeURIComponent(JSON.stringify(wod))}; expires=${midnight.toUTCString()}; path=/`;
 
-    const movHtml = wod.movimientos.map(m => `
-      <li class="wod-movement-item">
-        <span class="wod-movement-name">${m.nombre}</span>
-        <span class="wod-movement-scheme">${m.esquema}</span>
-      </li>`).join('');
+    const movHtml = wod.movimientos.map(m => {
+      const ytUrl = `https://www.youtube.com/results?search_query=crossfit+${encodeURIComponent(m.nombre)}+tutorial`;
+      return `<li class="wod-movement-item"><div style="display:flex;flex-direction:column;gap:2px;"><span class="wod-movement-name">${m.nombre}</span><a href="${ytUrl}" target="_blank" style="font-size:10px;color:#888;letter-spacing:1px;text-decoration:none;display:flex;align-items:center;gap:4px;">▶ Ver en YouTube</a></div><span class="wod-movement-scheme">${m.esquema}</span></li>`;
+    }).join('');
 
     content.innerHTML = `
       <div class="wod-panel-header">
