@@ -850,7 +850,16 @@ async function generateWOD() {
       const wodCached = JSON.parse(cached);
       const movHtmlC = wodCached.movimientos.map(m => `<li class="wod-movement-item"><span class="wod-movement-name">${m.nombre}</span><span class="wod-movement-scheme">${m.esquema}</span></li>`).join('');
       panel.classList.add('visible');
-      content.innerHTML = `<div class="wod-panel-header"><div class="wod-panel-title"><h3>${wodCached.nombre}</h3><span class="wod-date">${todayName} · ${dateStr}</span></div><button class="wod-close" onclick="closeWOD()">×</button></div><div class="wod-body"><div class="wod-format-row"><span class="wod-format-badge">${wodCached.formato}</span><span class="wod-cap">TIME CAP <span>${wodCached.cap}</span></span></div><div class="wod-movements"><div class="wod-movements-label">Movimientos</div><ul class="wod-movement-list">${movHtmlC}</ul></div><div class="wod-desc-box"><p><strong style="color:var(--orange)">Estrategia:</strong> ${wodCached.descripcion}</p></div><div class="wod-scaling"><div class="wod-scale-item"><div class="wod-scale-label">RX</div><div class="wod-scale-text">${wodCached.rx}</div></div><div class="wod-scale-item"><div class="wod-scale-label">Scaled</div><div class="wod-scale-text">${wodCached.scaled}</div></div></div></div>`;
+      content.innerHTML = `
+        <div class="wod-panel-header">
+          <div class="wod-panel-title"><h3>${wodCached.nombre}</h3><span class="wod-date">${todayName} · ${dateStr}</span></div>
+          <button class="wod-close" onclick="closeWOD()">×</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 24px;background:#ff4d0015;border-bottom:1px solid #ff4d0033;">
+          <span style="font-size:18px;">😤</span>
+          <span style="font-size:12px;color:var(--orange);font-weight:500;letter-spacing:1px;text-transform:uppercase;">Te aguantas… es el WOD que te toca hoy.</span>
+        </div>
+        <div class="wod-body"><div class="wod-format-row"><span class="wod-format-badge">${wodCached.formato}</span><span class="wod-cap">TIME CAP <span>${wodCached.cap}</span></span></div><div class="wod-movements"><div class="wod-movements-label">Movimientos</div><ul class="wod-movement-list">${movHtmlC}</ul></div><div class="wod-desc-box"><p><strong style="color:var(--orange)">Estrategia:</strong> ${wodCached.descripcion}</p></div><div class="wod-scaling"><div class="wod-scale-item"><div class="wod-scale-label">RX</div><div class="wod-scale-text">${wodCached.rx}</div></div><div class="wod-scale-item"><div class="wod-scale-label">Scaled</div><div class="wod-scale-text">${wodCached.scaled}</div></div></div></div>`;
       panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     } catch(e) { /* si falla, genera uno nuevo */ }
